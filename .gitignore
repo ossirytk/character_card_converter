@@ -1,0 +1,8 @@
+*.yaml
+*.json
+*.png
+venv/
+.venv/
+.vscode
+Pipfile
+pipfile.lock
