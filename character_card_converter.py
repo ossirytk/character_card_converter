@@ -5,7 +5,11 @@ import yaml
 import glob
 import os.path
 
-## reqs pyyaml and Pillow
+SOURCE_DIR = os.path.curdir
+TARGET_DIR = os.path.curdir
+V2_PATTERN = os.path.join(SOURCE_DIR, "*spec_v2.png")
+TAVERN_PATTERN = os.path.join(SOURCE_DIR, "*tavern.png")
+
 def decode_character_card(card_path, is_V2 = False):
     im = Image.open(card_path)
     im.load()
@@ -28,41 +32,41 @@ def decode_character_card(card_path, is_V2 = False):
         print("Could not find character info in card: " + card_path)
     return chara_card
 
-def save_card_as_json(card_path, json_content, current_folder):
+def save_card_as_json(card_path, json_content):
     if 'name' in json_content:
         character_name = json_content['name']
 
-        copy_image_filename = os.path.join(current_folder, character_name + ".png")
+        copy_image_filename = os.path.join(TARGET_DIR, character_name + ".png")
         image = Image.open(card_path)
         data = list(image.getdata())
         image2 = Image.new(image.mode, image.size)
         image2.putdata(data)
         image2.save(copy_image_filename)
 
-        json_filename = os.path.join(current_folder, character_name + ".json")
+        json_filename = os.path.join(TARGET_DIR, character_name + ".json")
         with open(json_filename, 'w') as json_file:
             json_file.write(json.dumps(json_content))
 
-        yaml_filename = os.path.join(current_folder, character_name + ".yaml")
+        yaml_filename = os.path.join(TARGET_DIR, character_name + ".yaml")
         yaml_string=yaml.dump(json_content)
         with open(yaml_filename, 'w') as yaml_file:
             yaml_file.write(yaml_string)
     else:
         ("Could not find name filed in: " + card_path)
 
+def main():
+    v2_cards = glob.glob(V2_PATTERN)
+    tavern_cards = glob.glob(TAVERN_PATTERN)
+    if v2_cards is not None:
+        for v2_card in v2_cards:
+            print("Unwrapping v2 card: " + v2_card)
+            json_content = decode_character_card(v2_card, True)
+            save_card_as_json(v2_card, json_content)
+    if tavern_cards is not None:
+        for tavern_card in tavern_cards:
+            print("Unwrapping tavern card: " + tavern_card)
+            json_content =  decode_character_card(tavern_card)
+            save_card_as_json(tavern_card, json_content)
 
-current_folder = os.path.curdir
-v2_pattern = os.path.join(current_folder, "*v2.png")
-tavern_pattern = os.path.join(current_folder, "*tavern.png")
-v2_cards = glob.glob(v2_pattern)
-tavern_cards = glob.glob(tavern_pattern)
-if v2_cards is not None:
-    for v2_card in v2_cards:
-        print("Unwrapping v2 card: " + v2_card)
-        json_content = decode_character_card(v2_card, True)
-        save_card_as_json(v2_card, json_content, current_folder)
-if tavern_cards is not None:
-    for tavern_card in tavern_cards:
-        print("Unwrapping tavern card: " + tavern_card)
-        json_content =  decode_character_card(tavern_card)
-        save_card_as_json(tavern_card, json_content, current_folder)
+if __name__ == "__main__":
+    main()
