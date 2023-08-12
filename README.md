@@ -7,6 +7,16 @@ The default settings will convert the character cards in the currect folder into
 
 The Tavern cards need to be in the format *tavern.png and V2 cards in the format *spec_v2.png.
 
+Install the package using python pipenv
+>pip install pipenv
+
+>pipenv install
+
+>pipenv run python .\character_card_converter.py
+
+or
+>pipenv run python .\character_card_converter.py --type <type> --source <source dir> --target <target dir>
+
 >_--type_
 Conversion type
 
