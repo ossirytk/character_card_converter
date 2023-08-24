@@ -26,6 +26,8 @@ classifiers = [
 ]
 dependencies = [
   "click",
+  "PyYAML==6.0.1",
+  "Pillow==10.0.0",
 ]
 
 [project.urls]
@@ -33,11 +35,8 @@ Documentation = "https://github.com/unknown/character-card-converter#readme"
 Issues = "https://github.com/unknown/character-card-converter/issues"
 Source = "https://github.com/unknown/character-card-converter"
 
-[project.scripts]
-character-card-converter = "character_card_converter.cli:character_card_converter"
-
 [tool.hatch.version]
-path = "src/character_card_converter/__about__.py"
+path = "character_card_converter/__about__.py"
 
 [tool.hatch.envs.default]
 dependencies = [
@@ -67,7 +66,7 @@ dependencies = [
   "ruff>=0.0.243",
 ]
 [tool.hatch.envs.lint.scripts]
-typing = "mypy --install-types --non-interactive {args:src/character_card_converter tests}"
+typing = "mypy --install-types --non-interactive {args:character_card_converter tests}"
 style = [
   "ruff {args:.}",
   "black --check --diff {args:.}",
@@ -147,11 +146,11 @@ source_pkgs = ["character_card_converter", "tests"]
 branch = true
 parallel = true
 omit = [
-  "src/character_card_converter/__about__.py",
+  "character_card_converter/__about__.py",
 ]
 
 [tool.coverage.paths]
-character_card_converter = ["src/character_card_converter", "*/character-card-converter/src/character_card_converter"]
+character_card_converter = ["character_card_converter", "*/character-card-converter/character_card_converter"]
 tests = ["tests", "*/character-card-converter/tests"]
 
 [tool.coverage.report]

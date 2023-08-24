@@ -1,4 +1,4 @@
-import argparse
+import click
 from PIL import Image
 import base64
 import json
@@ -55,22 +55,18 @@ def save_card_as_json(card_path, json_content, type, target_dir):
     else:
         ("Could not find name filed in: " + card_path)
 
-def main():
-    parser = argparse.ArgumentParser(
-                    prog='CharacterCardConverter',
-                    description='Converts V2 and Tavern type character cards to yaml and json format for use in text-generation-webui',
-                    epilog='The default is files from current folder are converted into current folder into both YAML and JSON'
-                    )
-    parser.add_argument('--type', choices=['JSON', 'YAML', 'JSON&YAML'], default = "JSON&YAML", required=False)
-    parser.add_argument('--source', default = SOURCE_DIR, required=False)
-    parser.add_argument('--target', default = TARGET_DIR, required=False)
-    args = parser.parse_args()
-    print(f"Conversion type: {args.type}")
-    print(f"Source dir: {args.source}")
-    print(f"target dir: {args.target}")
+@click.command()
+@click.option("--type", default="JSON&YAML", type=click.Choice(['JSON', 'YAML', 'JSON&YAML']), required=False, help="Type to convert to.")
+@click.option("--source", default = SOURCE_DIR, required=False,  help="File source dir.")
+@click.option("--target", default = SOURCE_DIR, required=False, help="Target Source dir")
+def cli(type, source, target):
+    """Simple program that converts V2 and Tavern character cards to Yaml and Json."""
+    print(f"Conversion type: {type}")
+    print(f"Source dir: {source}")
+    print(f"target dir: {target}")
 
-    v2_pattern = os.path.join(args.source, "*spec_v2.png")
-    tavern_pattern = os.path.join(args.source, "*tavern.png")
+    v2_pattern = os.path.join(source, "*spec_v2.png")
+    tavern_pattern = os.path.join(source, "*tavern.png")
 
     v2_cards = glob.glob(v2_pattern)
     tavern_cards = glob.glob(tavern_pattern)
@@ -79,12 +75,12 @@ def main():
         for v2_card in v2_cards:
             print("Unwrapping v2 card: " + v2_card)
             json_content = decode_character_card(v2_card, True)
-            save_card_as_json(v2_card, json_content, args.type, args.target)
+            save_card_as_json(v2_card, json_content, type, target)
     if tavern_cards is not None:
         for tavern_card in tavern_cards:
             print("Unwrapping tavern card: " + tavern_card)
             json_content =  decode_character_card(tavern_card)
-            save_card_as_json(tavern_card, json_content, args.type, args.target)
+            save_card_as_json(tavern_card, json_content, type, target)
 
 if __name__ == "__main__":
-    main()
+    cli()
