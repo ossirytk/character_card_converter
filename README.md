@@ -17,6 +17,9 @@ Install the package using python pipenv
 or
 >pipenv run python .\character_card_converter.py --type <type> --source <source dir> --target <target dir>
 
+After pipenv install you can run with the script name
+>decode-character-card --type <type> --source <source dir> --target <target dir>
+
 >_--type_
 Conversion type
 

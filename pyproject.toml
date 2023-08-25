@@ -30,6 +30,9 @@ dependencies = [
   "Pillow==10.0.0",
 ]
 
+[project.scripts]
+decode-character-card = "character_card_converter.decoder:cli"
+
 [project.urls]
 Documentation = "https://github.com/unknown/character-card-converter#readme"
 Issues = "https://github.com/unknown/character-card-converter/issues"
