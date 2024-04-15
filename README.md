@@ -1,3 +1,4 @@
+# !!This repository is no longer being maintained!!
 # character_card_converter
 The character card converted is a batch converter for V2 and Tavern character cards.
 
